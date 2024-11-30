@@ -1,30 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker { image 'python3:latest' }
+    }
     stages {
-        stage('Build') { 
+        stage('Version') { 
             steps {
-                sh 'python -m py_compile sources/add2vals.py sources/calc.py' 
-                stash(name: 'compiled-results', includes: 'sources/*.py*') 
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'py.test --junit-xml test-reports/results.xml sources/test_calc.py'
-            }
-            post {
-                always {
-                    junit 'test-reports/results.xml'
-                }
-            }
-        }
-        stage('Deliver') {
-            steps {
-                sh "pyinstaller --onefile sources/add2vals.py"
-            }
-            post {
-                success {
-                    archiveArtifacts 'dist/add2vals'
-                }
+                sh 'python3 --version'
             }
         }
     }
