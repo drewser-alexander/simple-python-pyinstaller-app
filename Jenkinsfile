@@ -1,11 +1,10 @@
 pipeline {
-    agent {
-        docker { image 'python3:latest' }
-    }
+    agent any 
     stages {
-        stage('Version') { 
+        stage('Build') { 
             steps {
-                sh 'python3 --version'
+                sh 'python -m py_compile sources/add2vals.py sources/calc.py' 
+                stash(name: 'compiled-results', includes: 'sources/*.py*') 
             }
         }
     }
